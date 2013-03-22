@@ -11,7 +11,7 @@ post '/ip/add' do
   addresses.each { |address| ip_list << address unless ip_list.include?(address) }
 
   save_list(ip_list)
-
+  
   "List saved!"
 end
 
@@ -27,7 +27,7 @@ end
 
 get '/ip/all' do
   ip_list = load_list
-  
+
   content_type :json
   ip_list.to_json
 end
@@ -40,11 +40,14 @@ delete '/ip/all' do
 end
 
 def load_list
-  ip_list = File.open("list.txt", "r").read.split(',')
+  file = File.open("list.txt", "r")
+  ip_list = file.read.split(' ')
+  file.close
+  ip_list
 end
 
 def save_list(ip_list)
   file = File.open("list.txt","w")
-  file.print ip_list.join(",")
+  file.print ip_list.join(" ")
   file.close
 end
