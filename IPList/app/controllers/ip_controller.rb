@@ -9,21 +9,18 @@ class IpController < ApplicationController
         new_ip.save
       end
     end
-
-    respond_to do |format|
-      format.text { render text: "IP addresses added to list!" }
-    end
+    
+    render text: "IP addresses added to list!", content_type: 'text/plain'
   end
 
   def get
     item = params[:ip_address]
 
-    respond_to do |format|
-      if Ip.find_by_ip_address(item) == nil
-        format.any { render nothing: true, status: 500 }
-      else
-        format.text { render text: item }
-      end
+ 
+    if Ip.find_by_ip_address(item) == nil
+      render nothing: true, status: 500
+    else
+      render text: item, content_type: 'text/plain'
     end
   end
 
@@ -33,16 +30,12 @@ class IpController < ApplicationController
 
     all_ips.each { |item| ip_list << item.ip_address}
 
-    respond_to do |format|
-      format.json {render json: ip_list}
-    end
+    render json: ip_list, content_type: 'application/json'
   end
 
   def destroy
     Ip.delete_all unless Ip.all == nil
 
-    respond_to do |format|
-      format.text {render text: "All IP addresses deleted from list!"}
-    end
+    render text: "All IP addresses deleted from list!", content_type: 'text/plain'
   end
 end
